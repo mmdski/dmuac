@@ -1,4 +1,5 @@
-import Prelude hiding ((++), concat, foldr, map, length, sum)
+import Prelude hiding ((.), (++), concat, foldr, map, length, sum)
+import Char
 -- Chapter 4: Induction
 --
 -- 4.2 Examples of Induction on Natural Numbers
@@ -210,3 +211,74 @@ concat (xs:xss) = xs ++ concat xss
 --      = map f xs ++ concat (map (map f) xss)  { hypothesis }
 --      = concat(map f xs : map (map f) xss)    { concat.2 }
 --      = concat(map (map f) (xs:xss))          { map.2 }
+--
+-- Theorem 23. length (xs ++ (y:ys)) = 1 + length xs + length ys
+--
+-- length (xs ++ (y:ys))
+--      = length xs + length (y:ys)
+--      = length xs + (1 + length ys)
+--      = 1 + length xs + length ys
+-- 
+-- Exercise 5. Prove theorem 16
+-- Theorem 16. length (xs++ys) = length xs + length ys
+--
+-- Proof. Induction over xs. The base case is
+--
+-- length ([]++ys)
+--      = length ys                     { (++).1 }
+--      = 0 + length ys                 { 0 + x = x }
+--      = length [] + length ys         { length.1 }
+-- 
+-- Inductive case. Assume length (xs++ys) = length xs + length ys.
+--
+-- length ((x:xs)++ys) =
+--      = length (x : (xs++ys))         { (++).2 }
+--      = 1 + length (xs++ys)           { length.2 }
+--      = 1 + length xs + length ys     { hypothesis }
+--      = length (x:xs) + length ys     { length.2 }
+--
+-- QED
+--
+-- Exercise 6. Prove theorem 18.
+-- Theorem 18. map f (xs++ys) = map f xs ++ map f ys
+--
+-- Proof. Induction over xs. The base case is
+--
+-- map f ([]++ys)
+--      = map f ys                      { (++).1 }
+--      = [] ++ map f ys                { (++).1 }
+--      = map f [] ++ map f ys          { map.1 }
+
+-- Inductive case. Assume map f (xs++ys) = map f xs ++ map f ys
+--
+-- map f ((x:xs)++ys)
+--      = map f (x : (xs++ys))          { (++).2 }
+--      = f x : map f (xs++ys)          { map.2 }
+--      = f x : (map f xs ++ map f ys)  { hypothesis }
+--      = (f x : map f xs) ++ map f ys  { (++).2 }
+--      = map f (x:xs) ++ map f ys      { map.2 }
+--
+-- QED
+--
+-- Exercise 7. Prove theorem 19.
+(.) :: (a -> b) -> (c -> a) -> c -> b
+(.) f g x = f (g x)
+-- Theorem 19. (map f . map g) xs = map (f.g) xs
+--
+-- Proof. The base case is
+--
+-- (map f . map g) []
+--      = map f (map g [])              { (.) }
+--      = map f []                      { map.1 }
+--      = []                            { map.1 }
+--      = map (f.g) []                  { map.1 }
+--
+-- By induction over xs. Assume (map f . map g) xs = map (f.g) xs
+--
+-- (map f . map g) (x:xs)
+--      = map f (map g (x:xs))          { (.) }
+--      = map f (g x : map g xs)        { map.2 }
+--      = f (g x) : map f (map g xs)    { map.2 }
+--      = f.g x : (map f . map g) xs    { (.) }
+--      = f.g x : map (f.g) xs          { hypothesis }
+--      = map (f.g) (x:xs)              { map.2 }
