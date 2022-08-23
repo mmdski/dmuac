@@ -369,3 +369,72 @@ concat (xs:xss) = xs ++ concat xss
 --      = k*length (x:xs) + sum (x:xs)          { length.2, sum.2}
 -- QED
 --
+-- 4.6 Functional Equality
+--
+-- Theorem 25. map f . concat = concat (map (map f)).
+--
+-- Exercise 10. Prove Theorem 25.
+-- Proof. The theorem states that two functions are equal. Therefore, we use the
+-- definition of extensional equality of functions; thus we choose an arbitrary 
+-- list of lists xss, and we must prove that 
+--
+-- map f (concat xss) = concat (map (map f) xss). 
+--
+-- This has been proved by Theorem 22.
+--
+-- QED
+--
+-- Exercise 11. Prove that the ++ operator is associative.
+--
+-- (xs++ys)++zs = xs++(ys++zs)
+--
+-- Proof. By induction over xs. Base case. Let xs = [].
+--
+-- ([]++ys)++zs
+--      = ys++zs                { (++).1 }
+--      = []++(ys++zs)          { (++).1 }
+--
+-- Inductive case. Assume the hypothesis, (xs++ys)++zs = xs++(ys++zs).
+--
+-- ((x:xs)++ys)++zs
+--      = (x : (xs++ys))++zs    { (++).2 }
+--      = x : (xs++ys)++zs      { (++).2 }
+--      = x : xs++(ys++zs)      { hypothesis }
+--      = (x:xs)++(ys++zs)
+--
+-- QED
+--
+-- Exercise 12. Prove sum . map length = length . concat
+--
+-- Proof. The theorem states that two functions are equal. Therefore, we use 
+-- the definition of extensional equality of functions; thus we choose an 
+-- arbitrary list of lists xss, and we must prove that
+--
+-- sum . map length xss = length . concat xss
+--
+-- Proof. By induction. Base case.
+--
+-- sum . map length []
+--      = sum (map length [])                   { (.) }
+--      = sum []                                { map.1 }
+--      = 0                                     { sum.1 }
+--      = length []                             { length.1 }
+--      = length (concat [])                    { concat.1 }
+--      = length . concat []                    { (.) }
+--
+-- Inductive case. Assume the hypothesis 
+-- sum . map length xss = length . concat xss. We must prove
+-- sum . map length xs:xss = length . concat xs:xss.
+--
+-- sum . map length xs:xss
+--      = sum (map length xs:xss)               { (.) }
+--      = sum (length xs : map length xss)      { map.2 }
+--      = length xs + sum (map length xss)      { sum.2 }
+--      = length xs + sum . map length xss      { (.) }
+--      = length xs + length . concat xss       { hypothesis }
+--      = length xs + length (concat xss)       { (.) }
+--      = length (xs ++ concat xss)             { Theorem 16 }
+--      = length (concat (xs:xss))              { concat.2 }
+--      = length . concat (xs:xss)              { (.) }
+--
+-- QED
