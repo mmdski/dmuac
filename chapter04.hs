@@ -282,3 +282,90 @@ concat (xs:xss) = xs ++ concat xss
 --      = f.g x : (map f . map g) xs    { (.) }
 --      = f.g x : map (f.g) xs          { hypothesis }
 --      = map (f.g) (x:xs)              { map.2 }
+--
+-- Exercise 8. sum (map (1+) xs) = length xs + sum xs
+--
+-- After adding one to each element in a list xs, the sum of all elements in
+-- the list is equal to the length of the list plus 
+--
+-- The sum of all incremented elements in a list xs is equal the length of xs
+-- plus the sum of all elements in xs.
+--
+-- xs = [1,2,3,4]
+-- sum (map (1+) [1,2,3,4] )
+--      = sum (1+1 : map (1+) [2,3,4] )
+--      = sum ( 1+1 : 1+2 : map (1+) [3,4] )
+--      = sum ( 1+1 : 1+2 : 1+3 : map (1+) [4] )
+--      = sum ( 1+1 : 1+2 : 1+3 : 1+4 : map (1+) [] )
+--      = sum ( 1+1 : 1+2 : 1+3 : 1+4 : [] )
+--      = sum ( 2 : 3 : 4 : 5 : [] )
+--      = sum ( 2 : 3 : 4 : [5] )
+--      = sum ( 2 : 3 : [4,5] )
+--      = sum ( 2 : [3,4,5] )
+--      = sum [2,3,4,5]
+--      = 2 + sum [3,4,5]
+--      = 2 + 3 + sum [4,5]
+--      = 2 + 3 + 4 + sum [5]
+--      = 2 + 3 + 4 + 5 + sum []
+--      = 2 + 3 + 4 + 5 + 0
+--      = 14
+--
+-- length [1,2,3,4] + sum [1,2,3,4]
+--      = 1 + length [2,3,4] + 1 + sum [2,3,4]
+--      = 1 + 1 + length [3,4] + 1 + 2 + sum [3,4]
+--      = 1 + 1 + 1 + length [4] + 1 + 2 + 3 + sum [4]
+--      = 1 + 1 + 1 + 1 + length [] + 1 + 2 + 3 + 4 + sum []
+--      = 1 + 1 + 1 + 1 + 0 + 1 + 2 + 3 + 4 + 0
+--      = 4 + 10
+--      = 14
+--
+-- Exercise 9.
+-- Generalized Theorem 20: sum (map (k+) xs = k * length xs + sum xs
+--
+-- xs = [1,2,3,4], k = 3
+-- sum (map (3+) [1,2,3,4] )
+--      = sum (3+1 : map (3+) [2,3,4] )
+--      = sum ( 3+1 : 3+2 : map (3+) [3,4] )
+--      = sum ( 3+1 : 3+2 : 3+3 : map (3+) [4] )
+--      = sum ( 3+1 : 3+2 : 3+3 : 3+4 : map (3+) [] )
+--      = sum ( 3+1 : 3+2 : 3+3 : 3+4 : [] )
+--      = sum ( 4 : 5 : 6 : 7 : [] )
+--      = sum ( 4 : 5 : 6 : [7] )
+--      = sum ( 4 : 5 : [6,7] )
+--      = sum ( 4 : [5,6,7] )
+--      = sum [4,5,6,7]
+--      = 4 + sum [5,6,7]
+--      = 4 + 5 + sum [6,7]
+--      = 4 + 5 + 6 + sum [7]
+--      = 4 + 5 + 6 + 7 + sum []
+--      = 4 + 5 + 6 + 7 + 0
+--      = 22
+--
+-- 3 * length [1,2,3,4] + sum [1,2,3,4]
+--      = 3 * (1 + length [2,3,4]) + 1 + sum [2,3,4]
+--      = 3 * (1 + 1 + length [3,4]) + 1 + 2 + sum [3,4]
+--      = 3 * (1 + 1 + 1 + length [4]) + 1 + 2 + 3 + sum [4]
+--      = 3 * (1 + 1 + 1 + 1 + length []) + 1 + 2 + 3 + 4 + sum []
+--      = 3 * (1 + 1 + 1 + 1 + 0) + 1 + 2 + 3 + 4 + 0
+--      = 3*4 + 10
+--      = 22
+--
+-- Theorem: sum (map (k+) xs = k*length xs + sum xs
+
+-- Proof. Induction over xs. The base case is
+--
+-- sum (map (k+) [])
+--      = sum []                { map.1 }
+--      = 0 + sum []            { 0 + x = x }
+--      = length [] + sum []    { length.1 }
+--
+-- Inductive case. Assume sum (map (k+) xs) = k*length xs + sum xs
+-- sum (map (+k) (x:xs))
+--      = sum ((k+x) : map (k+) xs)             { map.2 }
+--      = (k + x) + sum (map (k+) xs)           { sum.2 }
+--      = (k + x) + (k*length xs + sum xs)      { hypothesis }
+--      = (k + k*length xs) + (x + sum xs)      { (+).algebra }
+--      = k*(1 + length xs) + (x + sum xs)      { (*).algebra }
+--      = k*length (x:xs) + sum (x:xs)          { length.2, sum.2}
+-- QED
+--
