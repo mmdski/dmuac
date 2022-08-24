@@ -1,4 +1,5 @@
-import Prelude hiding ((.), (++), concat, foldr, map, length, sum)
+import Prelude hiding ((.), (++), concat, flip, foldr, map, length, 
+        reverse, sum)
 import Char
 -- Chapter 4: Induction
 --
@@ -438,3 +439,80 @@ concat (xs:xss) = xs ++ concat xss
 --      = length . concat (xs:xss)              { (.) }
 --
 -- QED
+--
+-- 4.8 Limitations of Induction
+--
+-- Exercise 14. xss must be composed of finite lists. If xs in (xs:xss) is not
+-- finite, concat.2 will occur indefinitely.
+--
+-- Exercise 15.
+--
+-- Theorem 27. reverse . reverse = id
+--
+reverse :: [a] -> [a]
+reverse []     = []
+reverse (x:xs) = reverse xs ++ [x]
+--
+-- reverse . reverse [1,2,3]
+--      = reverse (reverse [1,2,3])
+--      = reverse (reverse [2,3] ++ [1])
+--      = reverse (reverse [3] ++ [2] ++ [1])
+--      = reverse (reverse [] ++ [3] ++ [2] ++ [1])
+--      = reverse ([] ++ [3] ++ [2] ++ [1])
+--      = reverse [3,2,1]
+--      = reverse [2,1] ++ [3]
+--      = reverse [1] ++ [2] ++ [3]
+--      = reverse [] ++ [1] ++ [2] ++ [3]
+--      = [] ++ [1] ++ [2] ++ [3]
+--      = [1,2,3]
+--      = id [1,2,3]
+--
+-- Exercise 16. Prove reverse (xs++ys) = reverse ys ++ reverse xs
+-- Then decide whether this list theorem happens to be true for infinite
+-- lists like [1..].
+--
+-- Proof. By induction over xs. The base case:
+--
+-- reverse ([]++ys)
+--      = reverse ys                                    { (++).1 }
+--      = reverse ys ++ []                              { (++).2 }
+--      = reverse ys ++ reverse []                      { reverse.1 }
+--
+-- The inductive case. The hypothesis is 
+-- reverse (xs++ys) = reverse ys ++ reverse xs
+--
+-- reverse ((x:xs)++ys)
+--      = reverse (x : (xs++ys))                        { (++).2 }
+--      = reverse (xs++ys) ++ [x]                       { reverse.2 }
+--      = reverse ys ++ reverse xs ++ [x]               { hypothesis }
+--      = reverse ys ++ reverse (x:xs)                  { reverse.2 }
+-- QED
+--
+-- This list theorem does not work for infinite lists like [1..]. It will be
+-- impossible for reverse (xs++ys) : x to complete operation since 
+-- reverse (xs++ys) is an infinitely long list and cannot be prepended to
+-- another list.
+--
+-- Exercise 17. Prove Theorem 27. reverse . reverse xs = xs.
+--
+-- Proof. By induction. The base case.
+--
+-- reverse . reverse []
+--      = reverse (reverse [])                          { (.) }
+--      = reverse []                                    { reverse.1 }
+--      = []                                            { reverse.1 }
+--
+-- The inductive case. The hypothesis is reverse . reverse xs = xs.
+--
+-- reverse . reverse (x:xs)
+--      = reverse (reverse (x:xs))                      { (.) }
+--      = reverse (reverse xs ++ [x])                   { reverse.2 }
+--      = reverse [x] ++ reverse (reverse xs)           { Theorem Ex. 16}
+--      = reverse [x] ++ xs                             { hypothesis }
+--      = [x] ++ xs                                     { reverse.2 }
+--      = (x:xs)                                        { (++).2 }
+--
+-- QED
+--
+-- Exercise 18. Theorem 27 does not hold for infinite lists because reversing
+-- an infinite list is an infinitely long operation.
