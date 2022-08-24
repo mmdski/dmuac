@@ -622,7 +622,7 @@ max x y = y     if y >= x
 >maximum :: Ord a => [a] -> a
 >maximum (x:xs) = foldr max x xs
 
-Exercise 23. Prove that maximum has the following propertx':
+Exercise 23. Prove that maximum has the following property:
 
 (maximum xs) >= x
 
@@ -640,18 +640,20 @@ In this case, (maximum xs) = x.
 
 Inductive case. Assume the hypothesis (maximum xs) >= x.
 
-maximum (x':xs)
-        = foldr max x' xs { maximum }
-        = foldr max x' (x:xs') { xs = (x:xs') }
-        = max x (foldr max x' xs') { foldr.2 }
-        = max x (maximum (x':xs')) { maximum }
+maximum (x:x':xs')
+        = foldr max x (x':xs') { maximum }
+        = max x' (foldr max x xs') { foldr.2 }
+        = max x' (maximum (x:xs')) { maximum }
+        = max x' (maximum xs)   { xs = (x:xs') }
 
-Case 1: maximum (x':xs') < x
+Case 1: (maximum xs) < x'
 
-In this case, max x (maximum (x':xs')) = x and (maximum xs) = x, since x is
-larger than any element in (x':xs'), which contains the other elements in 
-xs.
+In this case, max x' (maximum xs) = x'. Therefore maximum (x':xs) = x'.
 
-Case 2: maximum (x':xs') > x
+Case 2: (maximum xs) > x'
 
-Here, max x (maximum (x':xs')) = 
+Here, max x' (maximum xs) = maximum xs. Therefore, maximum (x':xs) > x'.
+
+Therefore, maximum (x:x':xs') >= x'.
+
+QED
