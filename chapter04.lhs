@@ -1,5 +1,5 @@
->import Prelude hiding ((.), (++), and, concat, foldr, length, map, or,  
->       reverse, sum)
+>import Prelude hiding ((.), (++), and, concat, foldr, length, map, 
+>       maximum, or, reverse, sum)
 >import Char
 
 Chapter 4: Induction
@@ -613,3 +613,45 @@ or xs
         = True                                  { (&&) }
 
 QED
+
+Exercise 22.
+
+max x y = x     if x >= y
+max x y = y     if y >= x
+
+>maximum :: Ord a => [a] -> a
+>maximum (x:xs) = foldr max x xs
+
+Exercise 23. Prove that maximum has the following propertx':
+
+(maximum xs) >= x
+
+where x is an arbitrary element of xs.
+
+Let xs = (x:xs')
+
+Proof. By induction. Base case: Assume length xs' = 0 so that xs = (x:[]).
+
+maximum xs
+        = foldr max x []        { maximum }
+        = x                     { foldr.1 }
+
+In this case, (maximum xs) = x.
+
+Inductive case. Assume the hypothesis (maximum xs) >= x.
+
+maximum (x':xs)
+        = foldr max x' xs { maximum }
+        = foldr max x' (x:xs') { xs = (x:xs') }
+        = max x (foldr max x' xs') { foldr.2 }
+        = max x (maximum (x':xs')) { maximum }
+
+Case 1: maximum (x':xs') < x
+
+In this case, max x (maximum (x':xs')) = x and (maximum xs) = x, since x is
+larger than any element in (x':xs'), which contains the other elements in 
+xs.
+
+Case 2: maximum (x':xs') > x
+
+Here, max x (maximum (x':xs')) = 
