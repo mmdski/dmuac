@@ -516,3 +516,28 @@ reverse (x:xs) = reverse xs ++ [x]
 --
 -- Exercise 18. Theorem 27 does not hold for infinite lists because reversing
 -- an infinite list is an infinitely long operation.
+--
+-- 4.10 Review Exercises
+--
+-- Exercise 19. length (concat xss) = sum (map length xss)
+--
+-- Also proven in Exercise 12.
+--
+-- Proof by induction. The base case.
+--
+-- length (concat [])
+--      = length []                                     { concat.1 }
+--      = 0                                             { length.1 }
+--      = sum []                                        { sum.1 }
+--      = map length []                                 { map.1 }
+--
+-- The inductive case. The hypothesis is length (concat xss) = sum (map length xss).
+-- 
+-- length (concat (xs:xss)) =
+--      = length (xs ++ concat xss)                     { concat.2}
+--      = length xs + length (concat xss)               { Theorem 16 }
+--      = length xs + sum (map length xss)              { hypothesis }
+--      = sum (length xs : map length xss)              { sum.2 }
+--      = sum (map length (xs:xss))                     { map.2 }
+--
+-- QED
