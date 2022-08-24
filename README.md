@@ -8,3 +8,5 @@ by John O'Donnell, Cordelia Hall, and Rex Page.
 
 Using Hugs on macOS and installed with Homebrew from this repository:
 [https://github.com/FranklinChen/hugs98-plus-Sep2006](https://github.com/FranklinChen/hugs98-plus-Sep2006).
+
+[Index of the Haskell 98 Prelude](https://www.haskell.org/onlinereport/prelude-index.html)
