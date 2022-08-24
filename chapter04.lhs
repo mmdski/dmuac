@@ -1,4 +1,5 @@
->import Prelude hiding ((.), (++), concat, foldr, map, length, reverse, sum)
+>import Prelude hiding ((.), (++), and, concat, foldr, length, map, or,  
+>       reverse, sum)
 >import Char
 
 Chapter 4: Induction
@@ -392,7 +393,7 @@ QED
 
 Exercise 11. Prove that the ++ operator is associative.
 
-(xs++ys)++zs = xs++(ys++zs)
+Theorem 109. (xs++ys)++zs = xs++(ys++zs)
 
 Proof. By induction over xs. Base case. Let xs = [].
 
@@ -544,5 +545,71 @@ length (concat (xs:xss)) =
      = length xs + sum (map length xss)              { hypothesis }
      = sum (length xs : map length xss)              { sum.2 }
      = sum (map length (xs:xss))                     { map.2 }
+
+QED
+
+>and, or          :: [Bool] -> Bool
+>and              =  foldr (&&) True
+>or               =  foldr (||) False
+
+Exercise 20. Prove that or xs returns True if True is one element in xs.
+
+Proof. Assume xs is of type [Bool], it has n+1 elements, and True is one 
+element in xs.
+
+P(n) = or xs = True
+
+By induction. The base case. (n = 0)
+
+or xs
+        = or [True]                             { xs = [True] }
+        = foldr (||) False ([True])             { or }
+        = (||) True (foldr (||) False [])       { foldr.2 }
+        = (||) True (False)                     { foldr.2}
+        = True                                  { (||) }
+
+The inductive case.
+
+or xs
+        = foldr (||) False xs                   { or }
+        = foldr (||) False (y:ys)               { xs = (y:ys)}
+        = (||) y (foldr (||) False ys)          { foldr.2 }
+        = (||) y (or ys)                        { or }
+
+There are two cases. Case 1: y = True
+
+        = (||) True (or ys)                     { y = True }
+        = True                                  { (||) }
+
+Case 2: or ys = True
+
+        = (||) y True                           { hypothesis }
+        = True                                  { (||) }
+
+QED
+
+Exercise 21. Prove that and xs returns True if all elements in xs are True.
+
+P(n) = and xs = True
+
+By induction. The base case. (n = 0)
+
+or xs
+        = and [True]                            { xs = [True] }
+        = foldr (&&) True ([True])              { and }
+        = (&&) True (foldr (&&) True [])        { foldr.2 }
+        = (&&) True (True)                      { foldr.2}
+        = True                                  { (&&) }
+
+The inductive case. The hypothesis is and xs = True
+
+or xs
+        = foldr (&&) True xs                    { and }
+        = foldr (&&) True (y:ys)                { xs = (y:ys)}
+        = (&&) y (foldr (&&) True ys)           { foldr.2 }
+        = (&&) True (foldr (&&) True ys)        { y = True }
+        = (&&) True (and ys)                    { and }
+        = (&&) True (True)                      { hypothesis }
+        = True                                  { (&&) }
 
 QED
