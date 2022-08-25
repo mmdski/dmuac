@@ -657,3 +657,57 @@ Here, max x' (maximum xs) = maximum xs. Therefore, maximum (x':xs) > x'.
 Therefore, maximum (x:x':xs') >= x'.
 
 QED
+
+Exercise 24.
+
+>first :: [[a]] -> [a]
+>first [] = []
+>first (xs:xss) =
+>       let (y:ys) = xs
+>       in y : first xss
+
+Exercise 25. Prove concat = foldr (++) []. Assume finite lists for induction.
+
+Proof. Using the extensional quality of functions, and taking an arbitrary, 
+finite list of lists xss, with elements of finite lists, prove 
+concat xss = foldr (++) [] xss.
+
+By induction. The base case.
+
+concat []
+        = []                                    { concat.1 }
+        = foldr (++) [] []                      { foldr.1 }
+
+The inductive case. Assume concat xss = foldr (++) [] xss.
+
+concat (xs:xss)
+        = xs ++ concat xss                      { concat.2 }
+        = (++) xs foldr (++) [] xss             { hypothesis }
+        = foldr (++) [] (xs:xss)                { foldr.2 }
+
+QED
+
+Exercise 26. Definition of and taken from Haskell 98 Prelude. (oops)
+
+Exercise 27. Prove and ([False] ++ xs) = False, where xs :: [Bool]
+
+Proof. By induction. The base case.
+
+and ([False] ++ [])
+        = and [False]                           { (++).1 }
+        = foldr (&&) True [False]               { and }
+        = (&&) False (foldr (&&) True [])       { foldr.2 }
+        = (&&) False (True)                     { foldr.1 }
+        = False                                 { (&&) }
+
+The inductive case. Assume and ([False] ++ xs) = False.
+
+and ([False] ++ (x:xs))
+        = and (False : ([]++(x:xs)))            { (++).2 }
+        = and (False : (x:xs))                  { (++).1 }
+        = and (False:x:xs)                      { (:) }
+        = foldr (&&) True (False:x:xs)          { and }
+        = (&&) False (foldr (&&) True (x:xs))   { foldr.2 }
+        = False                                 { (&&) }
+
+QED
