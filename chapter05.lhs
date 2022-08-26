@@ -186,8 +186,8 @@ f :: a -> b
 >inorderf f BinLeaf = []
 >inorderf f (BinNode x t1 t2) = inorderf f t1 ++ [f x] ++ inorderf f t2
 
-inorder tree6 => [1,2,3,4,5,6,7]
-inorderf (2*) tree6 => [2,4,6,8,10,12,14]
+inorder tree6 ==> [1,2,3,4,5,6,7]
+inorderf (2*) tree6 ==> [2,4,6,8,10,12,14]
 
 5.3.2 Processing Tree Structures
 
@@ -232,8 +232,8 @@ Exercise 5.
 >           BinLeaf)
 >       BinLeaf
 
-size tallTree7 => 7
-height tallTree7 => 7
+size tallTree7 ==> 7
+height tallTree7 ==> 7
 
 >shortTree7 :: BinTree Int
 >shortTree7 =
@@ -241,8 +241,8 @@ height tallTree7 => 7
 >       (BinNode 2 (BinNode 1 BinLeaf BinLeaf) (BinNode 3 BinLeaf BinLeaf))
 >       (BinNode 6 (BinNode 5 BinLeaf BinLeaf) (BinNode 7 BinLeaf BinLeaf))
 
-size shortTree7 => 7
-height shortTree7 => 3
+size shortTree7 ==> 7
+height shortTree7 ==> 3
 
 Exercise 6.
 
@@ -311,3 +311,38 @@ Exercise 8.
 >mapTree :: (a->b) -> BinTree a -> BinTree b
 >mapTree f BinLeaf = BinLeaf
 >mapTree f (BinNode x t1 t2) = BinNode (f x) (mapTree f t1) (mapTree f t2)
+
+Exercise 9.
+
+concatTree (Node [2] (Node [3,4] Tip Tip))
+           (Node [5] Tip Tip)
+==> [3,4,2,5]
+
+>concatTree :: (BinTree [a]) -> [a]
+>concatTree BinLeaf = []
+>concatTree (BinNode xs t1 t2) = concatTree t1 ++ xs ++ concatTree t2
+
+concatTree (BinNode [2] (BinNode [3,4] BinLeaf BinLeaf)
+                        (BinNode [5] BinLeaf BinLeaf))
+==> [3,4,2,5]
+
+Exercise 10.
+
+>zipTree :: (BinTree a) -> (BinTree b) -> Maybe [(a,b)]
+>zipTree BinLeaf           BinLeaf           = Just []
+>zipTree (BinNode x ll lr) BinLeaf           = Nothing
+>zipTree BinLeaf           (BinNode y rl rr) = Nothing
+>zipTree (BinNode x ll lr) (BinNode y rl rr) =
+>   case zipTree ll rl of
+>       Nothing -> Nothing
+>       Just ls -> case zipTree lr rr of
+>           Nothing -> Nothing
+>           Just rs -> Just (ls ++ [(x,y)] ++ rs)
+
+zipTree (BinNode 2 (BinNode 1 BinLeaf BinLeaf) (BinNode 3 BinLeaf BinLeaf))
+        (BinNode 5 (BinNode 4 BinLeaf BinLeaf) (BinNode 6 BinLeaf BinLeaf))
+==> Just [(1,4),(2,5),(3,6)]
+
+zipTree (BinNode 2 (BinNode 1 BinLeaf BinLeaf) (BinNode 3 BinLeaf BinLeaf))
+        (BinNode 5 (BinNode 4 BinLeaf BinLeaf) BinLeaf)
+==> Nothing
