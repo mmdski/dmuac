@@ -1,3 +1,5 @@
+Chapter 5 Trees
+
 5.2 Representing Trees in Haskell
 
 >data BinTreeInt
@@ -263,4 +265,49 @@ unbalancedTree = BinNode 1
     (BinNode 4 (BinNode 5 BinLeaf BinLeaf) BinLeaf)
 
 unbalancedTree, defined above, returns True for the modified definition of
-balaned.
+balanced.
+
+5.3.3 Evaluating Expression Trees
+
+>data Exp
+>   = Const Integer
+>   | Add Exp Exp
+>   | Mult Exp Exp
+
+>eval :: Exp -> Integer
+>eval (Const n) = n
+>eval (Add e1 e2) = eval e1 + eval e2
+>eval (Mult e1 e2) = eval e1 * eval e2
+
+5.3.4 Binary Search Trees
+
+>linSearch :: Eq a => a -> [(a,b)] -> Maybe b
+>linSearch k [] = Nothing
+>linSearch k ((x,y):xs) =
+>   if k==x
+>       then Just y
+>       else linSearch k xs
+
+>bstSearch :: Ord a => a -> BinTree (a,b) -> Maybe b
+>bstSearch key BinLeaf = Nothing
+>bstSearch key (BinNode (x,y) t1 t2) =
+>   if key == x
+>       then Just y
+>       else if key < x
+>           then bstSearch key t1
+>           else bstSearch key t2
+
+>insert :: Ord a => (a,b) -> BinTree (a,b) -> BinTree (a,b)
+>insert (key,d) BinLeaf = BinNode (key,d) BinLeaf BinLeaf
+>insert (key,d) (BinNode (x,y) t1 t2) =
+>   if key == x
+>       then BinNode (key,d) t1 t2
+>       else if key < x
+>           then BinNode (x,y) (insert (key,d) t1) t2
+>           else BinNode (x,y) t1 (insert (key,d) t2)
+
+Exercise 8.
+
+>mapTree :: (a->b) -> BinTree a -> BinTree b
+>mapTree f BinLeaf = BinLeaf
+>mapTree f (BinNode x t1 t2) = BinNode (f x) (mapTree f t1) (mapTree f t2)
