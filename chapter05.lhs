@@ -346,3 +346,21 @@ zipTree (BinNode 2 (BinNode 1 BinLeaf BinLeaf) (BinNode 3 BinLeaf BinLeaf))
 zipTree (BinNode 2 (BinNode 1 BinLeaf BinLeaf) (BinNode 3 BinLeaf BinLeaf))
         (BinNode 5 (BinNode 4 BinLeaf BinLeaf) BinLeaf)
 ==> Nothing
+
+Exercise 11.
+
+>zipTreeWith :: (a->b->c) -> BinTree a -> BinTree b -> Maybe [c]
+>zipTreeWith f BinLeaf           BinLeaf           = Just []
+>zipTreeWith f (BinNode x ll lr) BinLeaf           = Nothing
+>zipTreeWith f BinLeaf           (BinNode y rl rr) = Nothing
+>zipTreeWith f (BinNode x ll lr) (BinNode y rl rr) =
+>   case zipTreeWith f ll rl of
+>       Nothing -> Nothing
+>       Just ls -> case zipTreeWith f lr rr of
+>           Nothing -> Nothing
+>           Just rs -> Just (ls ++ [f x y] ++ rs)
+
+zipTreeWith (*)
+    (BinNode 2 (BinNode 1 BinLeaf BinLeaf) (BinNode 3 BinLeaf BinLeaf))
+    (BinNode 5 (BinNode 4 BinLeaf BinLeaf) (BinNode 6 BinLeaf BinLeaf))
+==> Just [(1,4),(2,5),(3,6)]
