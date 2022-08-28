@@ -1,5 +1,7 @@
 Chapter 5 Trees
 
+>import Prelude hiding (length)
+
 5.2 Representing Trees in Haskell
 
 >data BinTreeInt
@@ -364,3 +366,234 @@ zipTreeWith (*)
     (BinNode 2 (BinNode 1 BinLeaf BinLeaf) (BinNode 3 BinLeaf BinLeaf))
     (BinNode 5 (BinNode 4 BinLeaf BinLeaf) (BinNode 6 BinLeaf BinLeaf))
 ==> Just [(1,4),(2,5),(3,6)]
+
+5.4 Induction on Trees
+
+5.4.1 Repeated Reflection Theorem
+
+Theorem 29. Let t :: BinTree a. Then reflect (reflect t) = t.
+
+P(t) = reflect (reflect t) = t
+
+Proof. Induction over t. The base case is BinLeaf:
+
+reflect (reflect BinLeaf)
+    = reflect BinLeaf                               { reflect.1 }
+    = BinLeaf                                       { reflect.1 }
+
+The inductive case. Assume P(t1) and P(t2).
+
+reflect (reflect Node x t1 t2))
+    = reflect (Node x (reflect t2) (reflect t1))    { reflect.2 }
+    = Node x (reflect (reflect t1))                 { reflect.2 }
+             (reflect (reflect t2))
+    = Node x t1 t2                                  { hypothesis }
+
+QED
+
+5.4.2 Reflection and Reversing
+
+Theorem 30. inorder (reflect t) = reverse (inorder t)
+
+Two lemmas (left as an exercise):
+
+reverse xs ++ [x] = reverse ([x] ++ xs)
+reverse (xs++ys) = reverse ys ++ reverse xs
+
+Proof. Base case.
+
+inorder (reflect BinLeaf)
+    = inorder BinLeaf                               { reflect.1 }
+    = []                                            { inorder.1 }
+    = reverse []                                    { reverse.1 }
+    = reverse (inorder BinLeaf)                     { inorder.1 }
+
+Induction case. Assume the inductive hypothesis:
+    inorder (reflect t1) = reverse (inorder t1)
+    inorder (reflect t2) = reverse (inorder t2)
+
+Then
+
+inorder (reflect (BinNode x t1 t2))
+    = inorder (BinNode x (reflect t2) (reflect t1))         { reflect.2 }
+    = inorder (reflect t2) ++ [x] ++ inorder (reflect t1)   { inorder.2 }
+    = reverse (inorder t2) ++ [x] ++ reverse (inorder t1)   { hypothesis }
+    = reverse ([x] ++ inorder t2) ++ reverse (inorder t1)   { lemma 1 }
+    = reverse (inorder t1 ++ [x] ++ inorder t2)             { lemma 2 }
+    = reverse inorder (BinNode x t1 t2)                     { inorder.2 }
+
+QED
+
+
+5.4.3 The Height of a Balanced Tree
+
+Theorem 31. If balanced t, then size t = 2^h - 1.
+
+Proof. P(t) = balanced t -> size t = 2^h - 1.
+
+Induction over the tree structure. The base case.
+
+balanced BinLeaf = True
+h = height BinLeaf = 0
+size BinLeaf = 0
+2^h - 1 = 0
+
+The inductive case.
+
+    t = Node x l r
+    hl = height l
+    hr = height r
+
+Assumptions: (1) P(l), (2) P(r), balanced t = True
+
+h = height (Node x l r)
+    = 1 + max (height l) (height r)         { height.2 }
+    = 1 + height l                          { assumption }
+    = 1 + hl                                { definition of hl }
+size t
+    = size (Node x l r)                     { definition of t }
+    = 1 + size l + size r                   { size.2 }
+    = 1 + 2^hl - 1 + 2^hr - 1               { hypothesis }
+    = 2^hl + 2^hr - 1                       { arithmetic }
+    = 2^hl + 2^hl - 1                       { hl = hr }
+    = 2*2^hl - 1                            { algebra }
+    = 2*(2^hl + 1) - 1                      { algebra }
+    = 2^h - 1                               { definition of h }
+
+QED
+
+5.4.4 Length of a Flattened Tree
+
+>length :: [a] -> Int
+>length [] = 0
+>length (x:xs) = 1 + length xs
+
+Theorem 33. length (inorder t) = size t, where t is any finite binary tree.
+
+Proof. By tree induction over t. Base case.
+
+length (inorder BinLeaf)
+    = length []                                 { inorder.1 }
+    = 0                                         { length.1 }
+    = size BinLeaf                              { size.1 }
+
+Induction case. Assume the induction hypotheses:
+    length (inorder t1) = size t1
+    length (inorder t2) = size t2
+
+length (inorder (BinNode x t1 t2))
+    = length (inorder t1 ++ [x] ++ inorder t2)                  { inorder.2 }
+    = length (inorder t1 ++ [x]) + length (inorder t2)          { Theorem 16. }
+    = length (inorder t1) + length [x] + length (inorder t2)    { Theorem 16. }
+    = size t1 + length [x] + size t2                            { hypothesis }
+    = size t1 + (1 + length []) + size t2                       { length.2 }
+    = size t1 + (1 + 0) + size t2                               { length.2 }
+    = 1 + size t1 + size t2                                     { arithmetic }
+    = size (Node x t1 t2)                                       { size.2 }
+    = size t                                                    { definition t }
+
+5.5 Improving Execution Time
+
+time (inorder BinLeaf) = 0
+
+- time (xs ++ ys) = length xs     { time (++) }
+
+time BinLeaf = 0
+
+time (inorder (BinNode x t1 t2))
+    = 1 + time (inorder t1 ++ [x] ++ inorder t2)
+    = 1 + time (inorder t1) + time (inorder t2) + length (inorder t1)
+    = 1 + time (inorder t1) + time (inorder t2) + size t1
+
+- (BinNode x t1 t2) takes time 1 to set up
+- Concatenation, time of inorder t1, time of inorder t2, and time to set up
+    (BinNode x t1 t2)
+
+Suppose all right subtrees are empty.
+
+time (inorder (BinNode x t1 BinLeaf))
+    = 1 + time (inorder t1) + time (inorder BinLeaf) + size t1
+    = 1 + time (inorder t1) + 0 + size t1
+    = 1 + time (inorder t1) + size t1
+height (BinNode x t1 BinLeaf)
+    = 1 + max (height t1) (height t2)
+    = 1 + max (height t1) 0
+    = 1 + height t1
+size (BinNode x t1 BinLeaf)
+    = 1 + size t1 + size BinLeaf
+    = 1 + size t1
+
+size (BinNode x t1 BinLeaf) ~ height (BinNode x t1 BinLeaf)
+-> size t = height t when all the right-hand subtrees are empty
+
+5.6 Flattening Trees in Linear Time
+
+>g :: BinTree a -> [a] -> [a]
+>g BinLeaf ks = ks
+>g (BinNode x t1 t2) ks = g t1 (x : g t2 ks)
+
+Trying to prove the validity of
+    time (g t ks) = size tr
+
+Theorem 33. g t ks = inorder t ++ ks, where t :: BinTree a.
+
+Proof. Base case.
+
+g BinLeaf ks
+    = ks                        { g.1 }
+    = [] ++ ks                  { (++).1 }
+    = inorder BinLeaf ++ ks     { inorder.1 }
+
+Induction case. Assume the hypotheses
+
+    g t1 ks1 = inorder t1 ++ ks1
+    g t2 ks2 = inorder t2 ++ ks2
+
+g (BinNode x t1 t2) ks
+    = g t1 (x : g t2 ks)                            { g.2 }
+    = g t1 (x : inorder t2 ++ ks)                   { hypothesis.2 }
+    = g t1 ([x] ++ inorder t2 ++ ks)                { (++).2 }
+    = inorder t1 ++ ([x] ++ inorder t2 ++ ks)       { hypothesis.1 }
+    = (inorder t1 ++ [x] ++ inorder t2) ++ ks       { (++) associative }
+    = inorder (BinNode x t1 t2) ++ ks               { inorder.2 }
+    = inorder t ++ ks                               { t = BinNode x t1 t2 }
+
+QED
+
+>inorderEfficient :: BinTree a -> [a]
+>inorderEfficient t = g t []
+
+Theorem 34. time (g t ks) = size t where t :: BinTree a, arbitrary and finite
+
+Proof. By induction over the tree. Base case.
+
+time (g BinLeaf ks)
+    = 0                                         { assumption }
+    = size BinLeaf                              { size.1 }
+
+Inductive case. Assume the hypotheses
+
+    time (g t1 ks1) = size t1
+    time (g t2 ks2) = size t2
+
+By the assumption, time (g t1 ks1) = time (g t1 []). The time only depends on
+the tree argument.
+
+time (g (BinNode x t1 t2) ks)
+    = time (g t1 (x : g t2 ks))                 { g.2 }
+    = time (g t1 []) + 1 + time (g t2 [])       { assumption }
+    = size t1 + 1 + size t2                     { hypotheses }
+    = size (BinNode x t1 t2)                    { size.2 }
+
+QED
+
+Exercise 12.
+
+appendTree (BinNode 2 (BinNode 1 BinLeaf BinLeaf)
+                      (BinNode 3 BinLeaf BinLeaf))
+            [4,5]
+==> [1,2,3,4,5]
+
+>appendTree :: BinTree a -> [a] -> [a]
+>appendTree BinLeaf xs = xs
+>appendTree (BinNode x t1 t2) xs = appendTree t1 (x : appendTree t2 xs)
