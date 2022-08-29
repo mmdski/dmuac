@@ -1,3 +1,5 @@
+Chapter 6 Propositional Logic
+
 6.3 The Language of Propositional Logic
 
 >import Stdm
@@ -62,10 +64,10 @@ Exercise 10. Prove P, Q, R |- P /\ (Q /\ R)
 
 >th_ex10 = Theorem [P,Q,R] (And P (And Q R))
 >pr_ex10 = AndI (
-  Assume P, 
-  AndI 
-    (Assume Q, Assume R) 
-    (And Q R)) 
-  (And P (And Q R))
+> Assume P, 
+> AndI 
+>   (Assume Q, Assume R) 
+>   (And Q R)) 
+> (And P (And Q R))
 
 check_proof th_ex10 pr_ex10 ==> The proof is valid
