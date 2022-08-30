@@ -294,3 +294,43 @@ Exercise 18. Prove P, Q |- (P /\ Q) \/ (Q \/ R)
 >   (Or (And P Q) (Or Q R))
 > -- QED
 >ex18_check = check_proof th_ex18 pr_ex18
+
+6.5.7 Or Elimination {\/E}
+
+Theorem 48. (P /\ Q) \/ (P /\ R) |- P.
+
+>th_th48 = Theorem [Or (And P Q) (And P R)] P
+>pr_th48 =
+> OrE
+>   (Assume (Or (And P Q) (And P R)),
+>   AndEL
+>     (Assume (And P Q))
+>     P,
+>   AndEL
+>     (Assume (And P R))
+>     P)
+>   P
+> -- QED
+>th_48_check = check_proof th_th48 pr_th48
+
+6.5.8 Identity {ID}
+
+Theorem 50. P |- P.
+
+>th_th50 = Theorem [P] P
+>pr_th50 =
+> ID
+>   (Assume P)
+>   P
+> -- QED
+
+Theorem 51. |- True.
+
+>th_th51 = Theorem [] (Imp FALSE FALSE)
+>pr_th51 =
+> ImpI
+>   (ID
+>     (Assume FALSE)
+>     FALSE)
+>   (Imp FALSE FALSE)
+> -- QED
