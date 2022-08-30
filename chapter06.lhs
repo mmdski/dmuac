@@ -116,3 +116,37 @@ Theorem 40. P /\ Q |- Q /\ P
 >   (And Q P)
 
 QED
+
+Exercise 12. Prove (P /\ Q) /\ R |- P /\ (Q /\ R)
+
+> -- Isolate P
+>th_ex12_1 = Theorem [And (And P Q) R] P
+>pr_ex12_1 =
+> AndEL
+>   (AndEL
+>     (Assume (And (And P Q) R))
+>     (And P Q))
+>   P
+
+> -- Isolate Q
+>th_ex12_2 = Theorem [And (And P Q) R] Q
+>pr_ex12_2 =
+> AndER
+>   (AndEL
+>     (Assume (And (And P Q) R))
+>     (And P Q))
+>   Q
+
+> -- Isolate R
+>th_ex12_3 = Theorem [And (And P Q) R] R
+>pr_ex12_3 = AndER (Assume (And (And P Q) R)) R
+
+> -- Q /\ R
+>th_ex12_4 = Theorem [And (And P Q) R] (And Q R)
+>pr_ex12_4 = AndI (pr_ex12_2, pr_ex12_3) (And Q R)
+
+> -- P /\ (Q /\ R)
+>th_ex12 = Theorem [And (And P Q) R] (And P (And Q R))
+>pr_ex12 = AndI (pr_ex12_1, pr_ex12_4) (And P (And Q R))
+
+QED
