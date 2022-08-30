@@ -256,3 +256,41 @@ Exercise 16. Prove |- P /\ Q => Q /\ P.
 QED
 
 >ex16_check = check_proof th_ex16 pr_ex16
+
+6.5.6 Or Introduction {\/I_L}, {\/I_R}
+
+Theorem 47. P \/ Q |- P \/ Q.
+
+>th_th47 = Theorem [And P Q] (Or P Q)
+>pr_th47 =
+> OrIL
+>   (AndEL
+>     (Assume (And P Q))
+>     P)
+>   (Or P Q)
+
+QED
+
+Exercise 17. Prove P => False \/ P.
+
+>th_ex17 = Theorem [] (Imp P (Or FALSE P))
+>pr_ex17 =
+> ImpI
+>   (OrIR
+>     (Assume P)
+>     (Or FALSE P))
+>   (Imp P (Or FALSE P))
+> -- QED
+>ex17_check = check_proof th_ex17 pr_ex17
+
+Exercise 18. Prove P, Q |- (P /\ Q) \/ (Q \/ R)
+
+>th_ex18 = Theorem [P,Q] (Or (And P Q) (Or Q R))
+>pr_ex18 =
+> OrIL
+>   (AndI
+>     (Assume P, Assume Q)
+>     (And P Q))
+>   (Or (And P Q) (Or Q R))
+> -- QED
+>ex18_check = check_proof th_ex18 pr_ex18
