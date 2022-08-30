@@ -223,3 +223,36 @@ Theorem 44. |- (P /\ Q) -> Q
 >     (Assume (And P Q))
 >     Q)
 >   (Imp (And P Q) Q)
+
+Exercise 15. Prove P |- Q => P /\ Q.
+
+>th_ex15 = Theorem [P] (Imp Q (And P Q))
+>pr_ex15 =
+> ImpI
+>   (AndI
+>     (Assume P, Assume Q)
+>     (And P Q))
+>   (Imp Q (And P Q))
+
+QED
+
+>ex15_check = check_proof th_ex15 pr_ex15
+
+Exercise 16. Prove |- P /\ Q => Q /\ P.
+
+>th_ex16 = Theorem [] (Imp (And P Q) (And Q P))
+>pr_ex16 =
+> ImpI
+>   (AndI
+>     (AndER
+>       (Assume (And P Q))
+>       Q,
+>     AndEL
+>       (Assume (And P Q))
+>       P)
+>     (And Q P))
+>   (Imp (And P Q) (And Q P))
+
+QED
+
+>ex16_check = check_proof th_ex16 pr_ex16
