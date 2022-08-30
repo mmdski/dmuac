@@ -150,3 +150,44 @@ Exercise 12. Prove (P /\ Q) /\ R |- P /\ (Q /\ R)
 >pr_ex12 = AndI (pr_ex12_1, pr_ex12_4) (And P (And Q R))
 
 QED
+
+6.5.4 Imply Elimination {=>E}
+
+Theorem 42. Q /\ P, P /\ Q => R |- R.
+
+Proof.
+
+>th_th42 = Theorem [And Q P, Imp (And P Q) R] R
+>pr_th42 =
+> ImpE
+>   (AndI
+>     (AndER
+>       (Assume (And Q P))
+>       P,
+>     AndEL
+>       (Assume (And Q P))
+>       Q)
+>     (And P Q),
+>   Assume (Imp (And P Q) R))
+>   R
+> -- QED
+>th42_check = check_proof th_th42 pr_th42
+
+Exercise 13. Prove P, P => Q, (P /\ Q) => (R /\ S) |- S.
+
+>th_ex13 = Theorem [P, Imp P Q, Imp (And P Q) (And R S)] S
+>pr_ex13 =
+> AndER
+>   (ImpE
+>     (AndI
+>       (Assume P,
+>       ImpE
+>         (Assume P, Assume (Imp P Q))
+>         Q)
+>       (And P Q),
+>     Assume (Imp (And P Q) (And R S)))
+>     (And R S))
+>   S
+>ex13_check = check_proof th_ex13 pr_ex13
+
+QED
