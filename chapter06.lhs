@@ -191,3 +191,23 @@ Exercise 13. Prove P, P => Q, (P /\ Q) => (R /\ S) |- S.
 >ex13_check = check_proof th_ex13 pr_ex13
 
 QED
+
+Exercise 14. Prove P => Q, R => S, P /\ R |- S /\ R
+
+th_ex14 = Theorem [Imp P Q, Imp R S, And P R] (And S R)
+
+>th_ex14_1 = Theorem [And P R] R
+>pr_ex14_1 =
+> AndER
+>   (Assume (And P R))
+>   R
+
+>th_ex14 = Theorem [Imp P Q, Imp R S, And P R] (And S R)
+>pr_ex14 =
+> AndI
+>   (ImpE
+>     (pr_ex14_1,
+>     Assume (Imp R S))
+>     S,
+>   pr_ex14_1)
+>   (And S R)
