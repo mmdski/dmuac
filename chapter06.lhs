@@ -211,3 +211,15 @@ th_ex14 = Theorem [Imp P Q, Imp R S, And P R] (And S R)
 >     S,
 >   pr_ex14_1)
 >   (And S R)
+
+6.5.5 Imply Introduction {=>I}
+
+Theorem 44. |- (P /\ Q) -> Q
+
+>th_th44 = Theorem [] (Imp (And P Q) Q)
+>pr_th44 =
+> ImpI
+>   (AndER
+>     (Assume (And P Q))
+>     Q)
+>   (Imp (And P Q) Q)
