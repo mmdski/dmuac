@@ -334,3 +334,69 @@ Theorem 51. |- True.
 >     FALSE)
 >   (Imp FALSE FALSE)
 > -- QED
+
+6.5.9 Contradiction {CTR}
+
+Theorem 52. P,~P |- Q
+
+>th_th52 = Theorem [P, Not P] Q
+>pr_th52 =
+> CTR
+>   (ImpE
+>     (Assume P,
+>     Assume (Imp P FALSE))
+>     FALSE)
+>   Q
+> -- QED
+
+Theorem 53. a \/ b, ~a |- b
+
+>th_th53 = Theorem [Or P Q, Not P] Q
+>pr_th53 =
+> OrE
+>   (Assume (Or P Q),
+>   CTR (
+>     ImpE
+>       (Assume P,
+>       Assume (Imp P FALSE))
+>       FALSE)
+>     Q,
+>   ID
+>     (Assume Q)
+>     Q)
+>   Q
+> -- QED
+
+6.5.10 Reductio ad Absurdum {RAA}
+
+Theorem 54 (Double negation). ~~a |- a
+
+>th_th54 = Theorem [Not (Not P)] P
+>pr_th54 =
+> RAA
+>   (ImpE
+>     (Assume (Imp P FALSE),
+>     Assume (Imp (Imp P FALSE) FALSE))
+>   FALSE)
+>   P
+> -- QED
+
+6.5.11 Inferring the Operator Truth Tables
+
+Exercise 19. Prove True /\ True.
+
+>th_ex19_1 = Theorem [] (Imp (And TRUE TRUE) TRUE)
+>pr_ex19_1 =
+> ImpI
+>   (AndEL
+>     (Assume (And TRUE TRUE))
+>     TRUE)
+> (Imp (And TRUE TRUE) TRUE)
+
+>th_ex19_2 = Theorem [] (Imp TRUE (And TRUE TRUE))
+>pr_ex19_2 =
+> ImpI
+>   (AndI
+>     (Assume TRUE, Assume TRUE)
+>     (And TRUE TRUE))
+>   (Imp TRUE (And TRUE TRUE))
