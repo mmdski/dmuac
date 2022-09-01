@@ -418,3 +418,33 @@ Exercise 26. Prove the equation (P /\ False) /\ True = False.
 (P /\ False) /\ True
   False /\ True                   {/\ identity}
   False                           {/\ identity}
+
+6.7.3 Basic Properties of /\ and \/
+
+Exercise 27. Prove (P /\ ((Q \/ R) \/ Q)) /\ S = S /\ ((R \/ Q) /\ P).
+
+Proof by equational reasoning.
+
+(P /\ ((Q \/ R) \/ Q)) /\ S
+  = (P /\ ((R \/ Q) \/ Q)) /\ S     {\/ commutative}
+  = (P /\ (R \/ (Q \/ Q))) /\ S     {\/ associative}
+  = (P /\ (R \/ Q)) /\ S            {\/ indempotent}
+  = ((R \/ Q) /\ P) /\ S            {/\ commutative}
+  = S /\ ((R \/ Q) /\ P)            {/\ commutative}
+
+QED
+
+Exercise 28. Prove P /\ (Q /\ (R /\ S)) = ((P /\ Q) /\ R) /\ S.
+
+Proof by equational reasoning.
+
+P /\ (Q /\ (R /\ S))
+  = P /\ ((Q /\ R) /\ S)            {/\ associative}
+  = (P /\ (Q /\ R)) /\ S            {/\ associative}
+  = ((P /\ Q) /\ R) /\ S            {/\ associative}
+
+6.7.4 Distributive and DeMorgan's Laws
+
+Exercise 29. ~(a \/ b) = ~a /\ ~b
+
+Neither a nor b are true. Both a and b are not true.
