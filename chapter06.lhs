@@ -400,3 +400,21 @@ Exercise 19. Prove True /\ True.
 >     (Assume TRUE, Assume TRUE)
 >     (And TRUE TRUE))
 >   (Imp TRUE (And TRUE TRUE))
+
+6.7 Boolean Algebra: Equational Reasoning
+
+6.7.2 Operations with Constants
+
+Exercise 25. Simplify (P /\ False) \/ (Q /\ True).
+
+(P /\ False) \/ (Q /\ True)
+  False \/ (Q /\ True)            {/\ null}
+  False \/ Q                      {\/ identity}
+  Q \/ False                      {commutativity}
+  Q                               {\/ null}
+
+Exercise 26. Prove the equation (P /\ False) /\ True = False.
+
+(P /\ False) /\ True
+  False /\ True                   {/\ identity}
+  False                           {/\ identity}
