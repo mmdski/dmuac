@@ -448,3 +448,35 @@ P /\ (Q /\ (R /\ S))
 Exercise 29. ~(a \/ b) = ~a /\ ~b
 
 Neither a nor b are true. Both a and b are not true.
+
+6.7.7 Equivalence
+
+Exercise 30. Prove (A \/ B) /\ B <=> B
+
+Proof by equational reasoning.
+
+(A \/ B) /\ B <=> B = ((A \/ B) /\ B => B) /\ (B => (A \/ B) /\ B)
+
+(A \/ B) /\ B => B
+  = ~((A \/ B) /\ B) \/ B           {implication}
+  = B \/ ~((A \/ B) /\ B)           {\/ commutative}
+  = B \/ (~(A \/ B) \/ ~B)          {DeMorgan's law}
+  = B \/ (~B \/ ~(A \/ B))          {\/ commutative}
+  = (B \/ ~B) \/ ~(A \/ B)          {\/ associative}
+  = True \/ ~(A \/ B)               {\/ complement}
+  = True                            {\/ null}
+
+B => (A \/ B) /\ B
+  = ~B \/ ((A \/ B) /\ B)           {implication}
+  = ~B \/ (B /\ (A \/ B))           {\/ commutative}
+  = ~B \/ ((B /\ A) \/ (B /\ B))    {/\ distributes over \/}
+  = ~B \/ ((B /\ A) \/ B)           {/\ idempotent}
+  = ~B \/ (B \/ (B /\ A))           {\/ commutative}
+  = (~B \/ B) \/ (B /\ A)           {\/ associative}
+  = True \/ (B /\ A)                {\/ complement}
+  = True                            {\/ null}
+
+((A \/ B) /\ B => B) /\ (B => (A \/ B) /\ B)
+  = True /\ True. Therefore, (A \/ B) /\ B <=> B.
+
+QED
